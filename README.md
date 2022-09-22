@@ -9,7 +9,7 @@ Wrapper para a API do SUAP (Sistema Unificado de Administração Pública) do IF
 1. Clone o repositório
 
 ```bash
-git clone
+git clone https://github.com/ruangustavo/SUAP-API-Wrapper.git
 ```
 
 2. Instale as dependências
