@@ -1,9 +1,7 @@
-from urllib.parse import urljoin
-
 import requests
 from bs4 import BeautifulSoup
 
-from constants import BASE_URL
+from urls import LOGIN_URL
 
 
 class Suap:
@@ -18,15 +16,12 @@ class Suap:
 
     def get_csrf_token(self) -> str:
         """Get CSRF token from the SUAP website."""
-        url = urljoin(BASE_URL, "accounts/login/")
-        response = self.session.get(url)
+        response = self.session.get(LOGIN_URL)
         soup = BeautifulSoup(response.content, "html.parser")
         return soup.find("input", {"name": "csrfmiddlewaretoken"})["value"]
 
     def login(self, username: str, password: str) -> None:
         """Login to the SUAP website."""
-        url = urljoin(BASE_URL, "accounts/login/")
-
         data = {
             "csrfmiddlewaretoken": self.get_csrf_token(),
             "username": username,
@@ -36,6 +31,6 @@ class Suap:
             "g-recaptcha-response": "",
         }
 
-        response = self.session.post(url, data=data)
+        response = self.session.post(LOGIN_URL, data=data)
         soup = BeautifulSoup(response.content, "html.parser")
         return soup.find("p", class_="errornote") is None
