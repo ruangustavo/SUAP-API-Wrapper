@@ -11,8 +11,12 @@ LOGIN_ERROR_MESSAGE = "Por favor, entre com um usuário e senha corretos. Note q
 class Suap:
     session = requests.Session()
 
-    def __init__(self) -> None:
+    def __init__(self, username: str, password: str) -> None:
+        self.username = username
         self.session.headers["Referer"] = "https://suap.ifrn.edu.br/accounts/login/"
+
+        if not self.login(username, password):
+            raise ValueError(LOGIN_ERROR_MESSAGE)
 
     def get_csrf_token(self) -> str:
         """Get CSRF token from the SUAP website."""
