@@ -5,8 +5,6 @@ from bs4 import BeautifulSoup
 
 from constants import BASE_URL
 
-LOGIN_ERROR_MESSAGE = "Por favor, entre com um usuário e senha corretos. Note que ambos os campos diferenciam maiúsculas e minúsculas."
-
 
 class Suap:
     session = requests.Session()
@@ -16,7 +14,7 @@ class Suap:
         self.session.headers["Referer"] = "https://suap.ifrn.edu.br/accounts/login/"
 
         if not self.login(username, password):
-            raise ValueError(LOGIN_ERROR_MESSAGE)
+            raise ValueError("Invalid username or password")
 
     def get_csrf_token(self) -> str:
         """Get CSRF token from the SUAP website."""
@@ -39,4 +37,5 @@ class Suap:
         }
 
         response = self.session.post(url, data=data)
-        return LOGIN_ERROR_MESSAGE not in response.text
+        soup = BeautifulSoup(response.content, "html.parser")
+        return soup.find("p", class_="errornote") is None
