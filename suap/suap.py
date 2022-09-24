@@ -23,12 +23,9 @@ class Suap:
     def login(self, username: str, password: str) -> None:
         """Login to the SUAP website."""
         data = {
-            "csrfmiddlewaretoken": self.get_csrf_token(),
             "username": username,
             "password": password,
-            "this_is_the_login_form": "1",
-            "next": "/",
-            "g-recaptcha-response": "",
+            "csrfmiddlewaretoken": self.get_csrf_token(),
         }
 
         response = self.session.post(LOGIN_URL, data=data)
