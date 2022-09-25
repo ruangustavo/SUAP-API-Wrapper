@@ -1,7 +1,9 @@
+from typing import Dict
+
 import requests
 from bs4 import BeautifulSoup
 
-from urls import LOGIN_URL
+from urls import LOGIN_URL, PERSONAL_DATA_URL
 
 
 class Suap:
@@ -31,3 +33,25 @@ class Suap:
         response = self.session.post(LOGIN_URL, data=data)
         soup = BeautifulSoup(response.content, "html.parser")
         return soup.find("p", class_="errornote") is None
+
+    def get_personal_data(self) -> Dict[str, str]:
+        """Get personal data from the SUAP website."""
+        response = self.session.get(PERSONAL_DATA_URL.format(username=self.username))
+        soup = BeautifulSoup(response.content, "html.parser")
+
+        results = list(
+            map(
+                lambda s: s.text.strip(),
+                soup.find_all("dd"),
+            )
+        )
+
+        return {
+            "name": results[0],
+            "registration": results[1],
+            "cpf": results[5],
+            "rg": results[33],
+            "email": results[3],
+            "phone": results[50],
+            "birth_date": results[16],
+        }

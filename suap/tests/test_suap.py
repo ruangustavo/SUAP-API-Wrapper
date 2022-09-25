@@ -20,6 +20,9 @@ class TestSuap(unittest.TestCase):
         with self.assertRaises(ValueError):
             Suap("username", "password")
 
+    def test_get_personal_data(self) -> None:
+        personal_data = self.suap_session.get_personal_data()
+        self.assertEqual(len(personal_data), 7)
 
 if __name__ == "__main__":
     unittest.main()
