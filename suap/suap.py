@@ -38,20 +38,14 @@ class Suap:
         """Get personal data from the SUAP website."""
         response = self.session.get(PERSONAL_DATA_URL.format(username=self.username))
         soup = BeautifulSoup(response.content, "html.parser")
-
-        results = list(
-            map(
-                lambda s: s.text.strip(),
-                soup.find_all("dd"),
-            )
-        )
+        data = [s.text.strip() for s in soup.find_all("dd")]
 
         return {
-            "name": results[0],
-            "registration": results[1],
-            "cpf": results[5],
-            "rg": results[33],
-            "email": results[3],
-            "phone": results[50],
-            "birth_date": results[16],
+            "name": data[0],
+            "registration": data[1],
+            "cpf": data[5],
+            "rg": data[33],
+            "email": data[3],
+            "phone": data[50],
+            "birth_date": data[16],
         }
